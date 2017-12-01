@@ -2,6 +2,7 @@ defmodule Knapsack do
 
   @nPopulation 200
   @percent_of_selection 20
+  @percent_of_mutation 5
 
   def read(path_to_file) do
     {:ok, data} = File.read(path_to_file)
@@ -95,11 +96,27 @@ defmodule Knapsack do
     new ++ Enum.slice(population, nIndividuals, @nPopulation - nIndividuals)
   end
 
+  def mutation(population) do
+    old = population |>
+    Enum.take_random(round(@nPopulation / 100) * @percent_of_mutation)
+
+    new = old |>
+    Enum.map(fn x -> 
+      random_bytes = Enum.take_random(1..length(x), 3)
+      List.update_at(x, Enum.at(random_bytes, 0), &(if &1 == 0, do: 1, else: 0)) |>
+      List.update_at(Enum.at(random_bytes, 1), &(if &1 == 0, do: 1, else: 0)) |>
+      List.update_at(Enum.at(random_bytes, 2), &(if &1 == 0, do: 1, else: 0))
+    end)
+    population = population -- old
+    population ++ new
+  end
+
   def solve do
     "../../38.txt" |> 
     read |>
     generate_population |>
-    selection
+    selection |>
+    mutation |> length
     #crossingover |>
     #mutations |>
     #generate_new_individuals |>
