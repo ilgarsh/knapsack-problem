@@ -1,5 +1,5 @@
 defmodule Item do
-	defstruct [:id, :carrying, :capacity, :price] 
+	defstruct [:id, :index, :carrying, :capacity, :price] 
 
 	def parse(list) do
 	    list |> 
@@ -10,6 +10,16 @@ defmodule Item do
 	      {price, _} = Enum.at(list, i + 2)
 	      [%Item{id: k, carrying: x, capacity: cap, price: price}]
 	    end)
+    end
+
+    def sort_by_price(list) do
+    	list |>
+    	Enum.sort(&(&1.price > &2.price)) |>
+    	Enum.with_index |>
+    	Enum.map(fn x -> 
+    		{item, id} = x
+    		%Item{id: item.id, index: id, carrying: item.carrying, capacity: item.capacity, price: item.price} 
+    	end)
     end
 
     def getCarrying(list) do
