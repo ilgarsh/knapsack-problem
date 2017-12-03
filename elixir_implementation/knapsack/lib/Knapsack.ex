@@ -8,17 +8,19 @@ defmodule Knapsack do
     ## Finds the best set of items
     iex> Knapsack.find
 
-    %Individual{bit_sequence: [1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0], capacity: 9.9, carrying: 12006.0,
-    price: 4193.0}
+    %Individual{bit_sequence: [1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0], capacity: 10.6, carrying: 12451.0,
+    items: [0, 1, 2, 6, 7, 9, 10, 11, 15, 21, 24, 25, 26, 28], price: 4388.0}
+
     
 
     ## Run algorithm nth time and return the best of the best results of algorithm's work
     iex> Knapsack.run_nth_time(100)
 
-    %Individual{bit_sequence: [1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0,
-    0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0], capacity: 11.2, carrying: 12610.0,
-    price: 4516.0}
+    %Individual{bit_sequence: [1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0], capacity: 11.999999999999998,
+    carrying: 12987.0,
+    items: [0, 1, 2, 4, 6, 7, 9, 10, 11, 15, 21, 24, 25, 27, 28], price: 4537.0}
 
   """
 
@@ -193,9 +195,9 @@ defmodule Knapsack do
 
     iex> Knapsack.find
 
-    %Individual{bit_sequence: [1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0], capacity: 9.9, carrying: 12006.0,
-    price: 4193.0}
+    %Individual{bit_sequence: [1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0], capacity: 10.6, carrying: 12451.0,
+    items: [0, 1, 2, 6, 7, 9, 10, 11, 15, 21, 24, 25, 26, 28], price: 4388.0}
 
   """
   def find do
@@ -214,16 +216,18 @@ defmodule Knapsack do
 
     iex> Knapsack.run_nth_time(100)
 
-    %Individual{bit_sequence: [1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0,
-    0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0], capacity: 11.2, carrying: 12610.0,
-    price: 4516.0}
+    %Individual{bit_sequence: [1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0,
+    0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0], capacity: 11.999999999999998,
+    carrying: 12987.0,
+    items: [0, 1, 2, 4, 6, 7, 9, 10, 11, 15, 21, 24, 25, 27, 28], price: 4537.0}
 
   """
   def find_best_result(n) do
     0..n |>
     Enum.map(fn x -> find end) |>
     Enum.sort(&(&1.price > &2.price)) |>
-    List.first
+    List.first |> 
+    Individual.update_item_indexes
   end
 
 end
